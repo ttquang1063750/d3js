@@ -1,6 +1,7 @@
 const dims = {height: 300, width: 300, radius: 150};
 const cent = {x: (dims.width / 2 + 5), y: (dims.height / 2 + 5)};
 const colour = d3.scaleOrdinal(d3['schemeSet3']);
+const tAngle = d3.transition().duration(750);
 
 const svg = d3.select('.canvas')
     .append('svg')
@@ -19,12 +20,24 @@ const legend = d3.legendColor()
     .shapePadding(10)
     .scale(colour);
 
+const convertToSI = (value, base, unity) => {
+    let tableUnit = [ ' ', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y' ];
+    if (value === 0 || value === null) return '0.00 ' + unity;
+    let n = parseInt(Math.floor(Math.log(value) / Math.log(base)), 10);
+    let valueSized = value / Math.pow(base, n);
+    if (valueSized >= base) {
+        n++;
+        valueSized = 1;
+    }
+    return valueSized.toFixed(1) + tableUnit[n] + ' ' + unity;
+};
+
 const tooltip = d3.tip()
     .attr('class', 'tip card')
     .html(d => {
         return `
-            <div class="name">${d.data.name}</div>
-            <div class="cost">${d.data.cost}</div>
+            <div class="name" style="text-transform: capitalize;">${d.data.name}</div>
+            <div class="cost">${convertToSI(d.data.cost, 1000, 'đồng')}</div>
             <div class="delete">Click slice to delete</div>
 `;
     });
@@ -40,38 +53,9 @@ const arcPath = d3.arc()
     .innerRadius(dims.radius / 2);
 
 
-// Chart start from endAngle to startAngle
-const arcTweenEnter = (d) => {
-    const i = d3.interpolate(d.endAngle, d.startAngle);
-    return (t) => {
-        d.startAngle = i(t);
-
-        return arcPath(d);
-    };
-};
-
-// Chart remove from startAngle to endAngle
-const arcTweenExit = (d) => {
-    const i = d3.interpolate(d.startAngle, d.endAngle);
-    return (t) => {
-        d.startAngle = i(t);
-
-        return arcPath(d);
-    };
-};
-
-// Should only update from current to the new state
-const arcTweenUpdate = (d, i, a) => {
-    // Interpolate between the two objects
-    const interpolate = d3.interpolate(a[i].__current, d);
-
-    // Update the current prop with the new updated data
-    a[i].__current = interpolate(1);
-
-    return (t) => arcPath(interpolate(t));
-};
-
 const update = (data) => {
+    tooltip.hide();
+
     // Update colour scale domain
     colour.domain(data.map(d => d.name));
 
@@ -85,15 +69,32 @@ const update = (data) => {
 
     // Handler delete
     paths.exit()
-        .transition().duration(750)
-        .attrTween('d', arcTweenExit)
+        // .transition(tAngle)
+        // .attrTween('d', (d) => {
+        //     // Chart remove from startAngle to endAngle
+        //     const i = d3.interpolate(d.startAngle, d.endAngle);
+        //     return (t) => {
+        //         d.startAngle = i(t);
+        //
+        //         return arcPath(d);
+        //     };
+        // })
         .remove();
 
     // handler update
     paths.attr('d', arcPath)
         .attr('fill', d => colour(d.data.name))
-        .transition().duration(750)
-        .attrTween('d', arcTweenUpdate);
+        .transition(tAngle)
+        .attrTween('d', (d, i, a) => {
+            // Should only update from current to the new state
+            // Interpolate between the two objects
+            const interpolate = d3.interpolate(a[i].__current, d);
+
+            // Update the current prop with the new updated data
+            a[i].__current = interpolate(1);
+
+            return (t) => arcPath(interpolate(t));
+        });
 
 
     // handler create
@@ -105,8 +106,16 @@ const update = (data) => {
         .each((d, i, a) => {
             a[i].__current = d;
         })
-        .transition().duration(750)
-        .attrTween('d', arcTweenEnter);
+        .transition(tAngle)
+        .attrTween('d', (d) => {
+            // Chart start from endAngle to startAngle
+            const i = d3.interpolate(d.endAngle, d.startAngle);
+            return (t) => {
+                d.startAngle = i(t);
+
+                return arcPath(d);
+            };
+        });
 
     // Add events
     graph.selectAll('path')

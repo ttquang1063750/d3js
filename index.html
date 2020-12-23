@@ -9,25 +9,92 @@
     <script src="lib/materialize.min.js"></script>
     <title>D3JS</title>
 </head>
-<body class="indigo">
-<header class="indigo darken-1 section">
-    <h2 class="center white-text">Learning D3JS</h2>
-    <p class="flow-text green-text center text-lighten-2">Charts implementation...</p>
-</header>
-<div class="container section">
-    <div class="row">
-        <div class="col s12 m6">
-            <div class="card blue-grey darken-1">
-                <div class="card-content white-text">
-                    <span class="card-title">Ninja Wong</span>
-                    <p>Monthly money tracker for ninjas...</p>
-                </div>
-                <div class="card-action">
-                    <a href="donut/index.html">Demo</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+<body class="indigo" id="root">
+<script src="lib/babel.min.js"></script>
+<script src="lib/react.production.min.js"></script>
+<script src="lib/react-dom.production.min.js"></script>
+<script type="text/babel">
+    class HeaderComponent extends React.Component {
+        render() {
+            return (
+                <React.Fragment>
+                    <header className="indigo darken-1 section">
+                        <h2 className="center white-text">Learning D3JS</h2>
+                        <p className="flow-text green-text center text-lighten-2">Charts implementation...</p>
+                    </header>
+                </React.Fragment>
+            )
+        }
+    }
+
+    class CardComponent extends React.Component {
+        render() {
+            const cards = this.props.cards;
+            const Card = (props) => {
+                return (
+                    <div className="col s12 m6">
+                        <div className="card blue-grey darken-1">
+                            <div className="card-content white-text">
+                                <span className="card-title">{props.title}</span>
+                                <p>{props.description}</p>
+                            </div>
+                            <div className="card-action">
+                                <a href={props.link}>Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <React.Fragment>
+                    <div className="container section">
+                        <div className="row">
+                            {
+                                cards.map(card => {
+                                    return (
+                                        <Card {...card} key={card.link} />
+                                    );
+                                })
+                            }
+                        </div>
+                    </div>
+                </React.Fragment>
+            );
+        }
+    }
+
+    class AppComponent extends React.Component {
+        state = {
+          cards: [
+              {
+                  title: 'Pie Chart',
+                  description: 'Monthly money tracking...',
+                  link: 'donut/index.html'
+              },
+              {
+                  title: 'Fitness Tracker',
+                  description: 'The line chart tracking your fitness...',
+                  link: 'fitness-tracker/index.html'
+              }
+          ]
+        };
+
+        render() {
+            return (
+                <React.Fragment>
+                    <HeaderComponent />
+                    <CardComponent cards={this.state.cards}/>
+                </React.Fragment>
+            );
+        }
+    }
+
+    ReactDOM.render(
+        <AppComponent/>,
+        document.getElementById('root')
+    );
+</script>
 </body>
 </html>

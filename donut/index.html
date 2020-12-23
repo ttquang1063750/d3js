@@ -6,29 +6,13 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="../lib/materialize.min.css">
-    <title>Donut chart</title>
-    <style>
-        h2,p {
-            margin: 10px 0;
-        }
-        header {
-            margin-bottom: 40px;
-        }
-        .tip {
-            padding: 10px;
-            background-color: #333;
-            color: #fff;
-        }
-        .tip .delete {
-            color: hotpink;
-            font-size: 0.8em;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    <title>Donut Chart</title>
 </head>
 <body class="indigo">
 <header class="indigo darken-1 section">
-    <h2 class="center white-text">Ninja Wong</h2>
-    <p class="flow-text green-text center text-lighten-2">Monthly money tracker for ninjas...</p>
+    <h2 class="center white-text">Pie Chart</h2>
+    <p class="flow-text green-text center text-lighten-2">Monthly money tracking...</p>
 </header>
 <div class="container section">
     <div class="row">
@@ -42,7 +26,7 @@
                     </div>
 
                     <div class="input-field">
-                        <input type="text" id="cost">
+                        <input type="number" id="cost" min="0">
                         <label for="cost">Item Cost(VND)</label>
                     </div>
 
