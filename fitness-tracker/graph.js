@@ -96,13 +96,17 @@ const update = (data) => {
                 .attr('x1', x(new Date(d.date)))
                 .attr('y1', graphHeight)
                 .attr('x2', x(new Date(d.date)))
+                .attr('y2', graphHeight)
+                .transition('xDottedLine').duration(300)
                 .attr('y2', y(d.distance));
 
             yDottedLine
                 .attr('x1', 0)
                 .attr('y1', y(d.distance))
-                .attr('x2', x(new Date(d.date)))
-                .attr('y2', y(d.distance));
+                .attr('x2', 0)
+                .attr('y2', y(d.distance))
+                .transition('yDottedLine').duration(300)
+                .attr('x2', x(new Date(d.date)));
 
             dottedLines.style('opacity', 1);
         })
@@ -136,24 +140,7 @@ const update = (data) => {
 
 
 let data = [];
-db.collection('activities').onSnapshot(res => {
-    res.docChanges().forEach(change => {
-        const doc = {...change.doc.data(), id: change.doc.id};
-        switch (change.type) {
-            case 'added':
-                data.push(doc);
-                break;
-            case 'modified':
-                const index = data.findIndex(item => item.id === doc.id);
-                data[index] = doc;
-                break;
-            case 'removed':
-                data = data.filter(item => item.id !== doc.id);
-                break;
-            default:
-                break;
-        }
-    });
-
+bindDb(db, 'activities', rows => {
+    data = rows;
     update(data);
 });

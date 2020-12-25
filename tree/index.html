@@ -8,44 +8,40 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../lib/materialize.min.css">
     <link rel="stylesheet" href="styles.css">
-    <title>Fitness Tracker</title>
+    <title>Tree</title>
 </head>
-<body class="grey darken-4">
+<body class="grey darken-3">
 <div class="fixed-action-btn" style="bottom: auto; right: auto;">
     <a href="../index.html" class="btn-floating btn-large waves-effect waves-light">
         <i class="material-icons">arrow_back</i>
     </a>
+    <a href="#modal" class="btn-floating btn-large  waves-effect waves-light modal-trigger">
+        <i class="material-icons">add</i>
+    </a>
 </div>
-<div class="nav z-depth-0">
-    <div class="section center">
-        <h3 class="white-text center">
-            - The Dojo -
-        </h3>
-    </div>
-</div>
-
-<div class="section center">
-    <p class="grey-text flow-text">A fitness tracker for Ninja</p>
+<div class="center">
+    <div class="canvas"></div>
 </div>
 
-<div class="container section">
-    <div class="row">
-        <div class="col s12 l5">
-            <button class="active" data-activity="cycling">Cycling</button>
-            <button data-activity="running">Running</button>
-            <button data-activity="swimming">Swimming</button>
-            <button data-activity="walking">Walking</button>
-        </div>
-        <div class="col s12 l6 push-l1">
-            <div class="canvas"></div>
-        </div>
-    </div>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h4 class="pink-text center">Add New Node</h4>
+        <form>
+            <div class="input-field">
+                <input type="text" id="name" placeholder="Node Name">
+            </div>
 
-    <div class="row">
-        <form class="col m6 push-m3">
-            <p class="flow-text grey-text center">How much <span>cycling</span> have you done today?</p>
-            <input type="text" class="grey-text" id="cycling" placeholder="Distance in m">
-            <p class="pink-text center error text-lighten-1" id="error"></p>
+            <div class="input-field">
+                <select id="parent" style="display: block"></select>
+            </div>
+
+            <div class="input-field">
+                <input type="text" id="department" placeholder="Department">
+            </div>
+
+            <div class="input-field center">
+                <button class="btn pink white-text">Add Node</button>
+            </div>
         </form>
     </div>
 </div>

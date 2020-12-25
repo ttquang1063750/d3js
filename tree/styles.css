@@ -1,0 +1,20 @@
+text {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+.modal {
+    max-width: 500px;
+}
+
+
+.tip {
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+}
+
+.tip .delete {
+    color: hotpink;
+    font-size: 0.8em;
+}
